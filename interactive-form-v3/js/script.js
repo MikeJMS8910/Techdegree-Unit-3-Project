@@ -2,6 +2,7 @@ let currentCost = 0 //variable for getting the cost for the selected
 
 document.getElementById("other-job-role").style.display = "none" //makes sure to make the "other" job role invisible
 document.getElementById("name").focus() //foruses the mouse on the first input
+document.getElementById("payment").value = "credit-card" //sets payment to credit card
 
 document.getElementById("paypal").style.display = "none" //hides paypal payment option
 document.getElementById("bitcoin").style.display = "none" //hides bitcoin payment option
@@ -33,7 +34,7 @@ function validateZip(zipCode) { //function for validating zipcode
 }
 
 function is_creditCard(crCard) { //function for validating credit card
-    re = /^(?:(4[0-9]{12}(?:[0-9]{3})?)|(5[1-5][0-9]{14})|(6(?:011|5[0-9]{2})[0-9]{12})|(3[47][0-9]{13})|(3(?:0[0-5]|[68][0-9])[0-9]{11})|((?:2131|1800|35[0-9]{3})[0-9]{11}))$/;
+    re = /^(.{16})$/
     return re.test(crCard)
 }
 
@@ -121,6 +122,7 @@ document.querySelector('#activities-box').querySelectorAll("label").forEach(item
 
 document.getElementById("title").onchange = function(){ //when the job role input is changed it checks if it is put to other to see if it should change the display
     if(document.getElementById("title").value !== "other") {
+
         document.getElementById("other-job-role").style.display = "none"
     } else {
         document.getElementById("other-job-role").style.display = "block"
@@ -144,7 +146,9 @@ document.getElementById("payment").addEventListener("change", (e) => { //puts th
 });
 
 document.getElementById("design").addEventListener("change", (e) => { //changes the possible options depending on the desighn that is chosen
-    if(document.getElementById("design").value = "js puns") {
+
+    if(document.getElementById("design").value == "js puns") {
+        document.getElementById("color").value = "Select a design theme above"
         for(x = 0; x < document.getElementById("color").children.length; x++) {
             if(document.getElementById("color").children[x].dataset.theme == "js puns") {
                 document.getElementById("color").children[x].style.display = "block"
@@ -153,6 +157,9 @@ document.getElementById("design").addEventListener("change", (e) => { //changes 
             }
         }   
     } else {
+        document.getElementById("color").querySelector("option").style.display = "none"
+
+        document.getElementById("color").value = "Select a design theme above"
         for(x = 0; x < document.getElementById("color").children.length; x++) {
             if(document.getElementById("color").children[x].dataset.theme == "js puns") {
                 document.getElementById("color").children[x].style.display = "none"
@@ -165,82 +172,97 @@ document.getElementById("design").addEventListener("change", (e) => { //changes 
 
 document.querySelector(".container").querySelector("form").querySelector("button").addEventListener("click", (e) => { //validates all of the information to see if they where filled out correctly and if not it will turn the border red
     let firstCurrent = null
-    e.preventDefault()
+    let isGood = true
     if(document.getElementById("name").value.length == 0) {
-        document.getElementById("name").style.borderColor = "red"
+        isGood = false
+        document.getElementById("name").parentNode.className = "not-valid"
         firstCurrent = "name"
     } else {
-        document.getElementById("name").style.borderColor = ""
+        document.getElementById("name").parentNode.className = "valid"
     }
 
     if(document.getElementById("email").value.length == 0) {
-        document.getElementById("email").style.borderColor = "red"
+        isGood = false
+        document.getElementById("email").parentNode.className = "not-valid"
         if(firstCurrent == null) {
             firstCurrent = "email"
         }
     } else {
         if(validateEmail(document.getElementById("email").value) == true) {
-            document.getElementById("email").style.borderColor = ""
+            document.getElementById("email").parentNode.className = "valid"
         } else {
-            document.getElementById("email").style.borderColor = "red"
+            isGood = false
+            document.getElementById("email").parentNode.className = "not-valid"
         }
     }
 
-    if(document.getElementById("title").value == "Select Job Role") {
-        document.getElementById("title").style.borderColor = "red"
-    } else {
-        document.getElementById("title").style.borderColor = ""
-    }
+    //if(document.getElementById("title").value == "Select Job Role") {
+        //isGood = false
+        //document.getElementById("title").parentNode.querySelectorAll("label")[2].className = "not-valid"
+        //document.getElementById("title").style.borderColor = "red"
+    //} else {
+        //document.getElementById("title").parentNode.querySelectorAll("label")[2].className = "valid"
+    //}
 
-    if(document.getElementById("design").value == "Select Theme") {
-        document.getElementById("design").style.borderColor = "red"
-    } else {
-        document.getElementById("design").style.borderColor = ""
-    }
+    //if(document.getElementById("design").value == "Select Theme") {
+        //isGood = false
+        //document.getElementById("design").parentNode.querySelector("label").className = "not-valid"
+        //document.getElementById("design").style.borderColor = "red"
+    //} else {
+        //document.getElementById("design").querySelector("label")[0].className = "valid"
+    //}
 
-    if(document.getElementById("color").value == "Select a design theme above") {
-        document.getElementById("color").style.borderColor = "red"
-    } else {
-        document.getElementById("color").style.borderColor = ""
-    }
+    //if(document.getElementById("color").value == "Select a design theme above") {
+        //isGood = false
+        //document.getElementById("color").parentNode.querySelector("label").className = "not-valid"
+        //document.getElementById("color").style.borderColor = "red"
+    //} else {
+        //document.getElementById("color").className = "valid"
+    //}
 
     if(document.getElementById("payment").value == "select method") {
-        document.getElementById("payment").style.borderColor = "red"
+        isGood = false
+        document.getElementById("payment").className = "not-valid"
     } else {
-        document.getElementById("payment").style.borderColor = ""
+        document.getElementById("payment").className = "valid"
     }
 
     if(document.getElementById("title").value == "other") {
         if(document.getElementById("other-job-role").value.length == 0) {
-            document.getElementById("other-job-role").style.borderColor = "red"
+            isGood = false
+            document.getElementById("other-job-role").className = "not-valid"
         } else {
-            document.getElementById("other-job-role").style.borderColor = ""
+            document.getElementById("other-job-role").className = "valid"
         }
     }
 
     if(document.getElementById("payment").value == "credit-card") {
-        if(document.getElementById("exp-month").value.toLowerCase() == "select date") {
-            document.getElementById("exp-month").style.borderColor = "red"
-        } else {
-            document.getElementById("exp-month").style.borderColor = ""
-        }
+        //if(document.getElementById("exp-month").value.toLowerCase() == "select date") {
+            //isGood = false
+            //document.getElementById("exp-month").className = "not-valid"
+        //} else {
+            //document.getElementById("exp-month").className = "valid"
+        //}
 
-        if(document.getElementById("exp-year").value.toLowerCase() == "select year") {
-            document.getElementById("exp-year").style.borderColor = "red"
-        } else {
-            document.getElementById("exp-year").style.borderColor = ""
-        }
+        //if(document.getElementById("exp-year").value.toLowerCase() == "select year") {
+            //isGood = false
+            //document.getElementById("exp-year").className = "not-valid"
+        //} else {
+            //document.getElementById("exp-year").className = "valid"
+        //}
 
         if(document.getElementById("cc-num").value.length == 0) {
-            document.getElementById("cc-num").style.borderColor = "red"
+            isGood = false
+            document.getElementById("cc-num").parentNode.className = "not-valid"
             if(firstCurrent == null) {
                 firstCurrent == "cc-num"
             }
         } else {
             if(is_creditCard(document.getElementById("cc-num").value)) {
-                document.getElementById("cc-num").style.borderColor = ""
+                document.getElementById("cc-num").parentNode.className = "valid"
             } else {
-                document.getElementById("cc-num").style.borderColor = "red"
+                isGood = false
+                document.getElementById("cc-num").parentNode.className = "not-valid"
                 if(firstCurrent == null) {
                     firstCurrent == "cc-num"
                 }
@@ -248,33 +270,48 @@ document.querySelector(".container").querySelector("form").querySelector("button
         }
 
         if(document.getElementById("zip").value.length == 0) {
-            document.getElementById("zip").style.borderColor = "red"
+            isGood = false
+            document.getElementById("zip").parentNode.className = "not-valid"
             if(firstCurrent == null) {
                 firstCurrent == "zip"
             }
         } else {
             if(validateZip(document.getElementById("zip").value)) {
-                document.getElementById("zip").style.borderColor = ""
+                document.getElementById("zip").parentNode.className = "valid"
             } else {
-                document.getElementById("zip").style.borderColor = "red"
+                isGood = false
+                document.getElementById("zip").parentNode.className = "not-valid"
             }
         }
 
         if(document.getElementById("cvv").value.length == 0) {
-            document.getElementById("cvv").style.borderColor = "red"
+            isGood = false
+            document.getElementById("cvv").parentNode.className = "not-valid"
             if(firstCurrent == null) {
                 firstCurrent == "cvv"
             }
         } else {
             if(validateCvv(document.getElementById("cvv").value)) {
-                document.getElementById("cvv").style.borderColor = ""
+                document.getElementById("cvv").parentNode.className = "valid"
             } else {
-                document.getElementById("cvv").style.borderColor = "red"
+                isGood = false
+                document.getElementById("cvv").parentNode.className = "not-valid"
             }
         }
     }
 
+    if(document.getElementById("activities-cost").innerHTML == "Total: $0") {
+        document.getElementById("activities-cost").parentNode.querySelector("legend").className = "not-valid"
+        isGood = false
+    } else {
+        document.getElementById("activities-cost").parentNode.querySelector("legend").className = "valid"
+    }
+
     if(firstCurrent !== null) {
         document.getElementById(firstCurrent).focus()
+    }
+
+    if(isGood == false) {
+        e.preventDefault()
     }
 });
