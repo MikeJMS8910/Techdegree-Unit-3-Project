@@ -1,4 +1,5 @@
 let currentCost = 0 //variable for getting the cost for the selected
+let selected = document.activeElement //finds which element the user has currently selected
 
 document.getElementById("other-job-role").style.display = "none" //makes sure to make the "other" job role invisible
 document.getElementById("name").focus() //foruses the mouse on the first input
@@ -167,6 +168,26 @@ document.getElementById("design").addEventListener("change", (e) => { //changes 
                 document.getElementById("color").children[x].style.display = "block"
             }
         }
+    }
+});
+
+document.addEventListener("keydown", function(event) {
+    if (event.keyCode === 9) {
+        console.log(selected)
+        if(selected.dataset.cost !== null) {
+            selected.parentNode.style.borderColor = ""
+        }
+        function newSelected() {
+            selected = document.activeElement
+            if(selected.dataset.cost !== null) {
+                selected.parentNode.style.borderColor = "blue"
+            } else {
+                selected.style.borderColor = "blue"
+            }
+            console.log(selected)
+        }
+        setTimeout(newSelected, 100)
+        
     }
 });
 
